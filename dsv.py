@@ -25,7 +25,7 @@ LOGIN_URL       = 'https://issa.dsv.ru/Account/LogOnByAccount'
 LOCAL_CALLS_URL = 'https://issa.dsv.ru/detail/apus'
 EXT_CALLS_URL   = 'https://issa.dsv.ru/detail/mts'
 REGIONS = (
-        ('423', u'Приморский край'),
+        ('423', u'Приморский край - по умолчанию'),
         ('421', u'Хабаровский край'),
         ('424', u'Сахалинская область'),
         ('416', u'Амурская область'),
@@ -126,7 +126,7 @@ if __name__ == "__main__":
         make_option("--total", action="store_const", dest="action", const='total',
                 help = u"Получить только общуя статистику - сумма местных и междугородних звонков по телефонам"),
         make_option("--local", action="store_const", dest="action", const='local',
-                help = u"Получить статистику только локальных звонков"),
+                help = u"Получить статистику только локальных звонков (по умолчанию)"),
         make_option("--external", "--ild", action="store_const", dest="action", const='ext',
                 help = u"Получить статистику только звонков на межгород/мобильные"),
         make_option("--list", action="store_const", dest="action", const='phones',
