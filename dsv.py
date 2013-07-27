@@ -25,7 +25,7 @@ LOGIN_URL       = 'https://issa.dsv.ru/Account/LogOnByAccount'
 LOCAL_CALLS_URL = 'https://issa.dsv.ru/detail/apus'
 EXT_CALLS_URL   = 'https://issa.dsv.ru/detail/mts'
 REGIONS = (
-        ('423', u'Приморский край - по умолчанию'),
+        ('423', u'Приморский край (по умолчанию)'),
         ('421', u'Хабаровский край'),
         ('424', u'Сахалинская область'),
         ('416', u'Амурская область'),
@@ -91,7 +91,7 @@ class Downloader(object):
     def local_history(self, phone, month):
         return self._history(LOCAL_CALLS_URL, phone, month)
 
-    def ext_history(self, phone, month, year):
+    def ext_history(self, phone, month):
         return self._history(EXT_CALLS_URL, phone, month)
 
     def totals(self, phone, month):
@@ -118,7 +118,7 @@ if __name__ == "__main__":
         make_option("-r", "--region", action="store", choices=dict(REGIONS).keys(), type="choice", dest="region", default='423',
                 help = ("\t"*5).join([": ".join(r) for r in REGIONS])),
         make_option("-a", "--account", action="store", type="string", dest="account", default=DEFAULT_ACC,
-                help = u"Номер счета в Ростелекоме (можно посмотреть в счете)"),
+                help = u"Номер счета в Ростелекоме (можно посмотреть в квитанции)"),
         make_option("-p", "--pin", action="store", type="string", dest="pin", default=DEFAULT_PIN,
                 help = u"Пин-код ИССА, можно узнать в местном отделении РТ"),
         make_option("-d", "--date", action="store", type="string", dest="date", default=DEFAULT_DATE,
@@ -167,6 +167,7 @@ if __name__ == "__main__":
     elif options.action == 'ext':
         for phone in phones:
             for record in downloader.ext_history(phone, month):
+                record = [c.encode('utf-8') for c in record] #csv writer doesn't support unicode
                 out.writerow(record)
     elif options.action == 'phones':
         for phone in phones:
