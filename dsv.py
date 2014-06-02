@@ -17,8 +17,8 @@ or
     # apt-get install python-lxml
 """)
 
-DEFAULT_ACC = 'YOUR_ACC'
-DEFAULT_PIN = 'YOUR_PIN'
+DEFAULT_ACC = '' #YOUR_ACC
+DEFAULT_PIN = '' #YOUR_PIN
 DATE_FORMAT = "%m.%Y"
 DEFAULT_DATE = (datetime.now() -timedelta(days=datetime.now().day+1)).strftime('%m.%Y')
 LOGIN_URL       = 'https://issa.dsv.ru/Account/LogOnByAccount'
@@ -110,7 +110,7 @@ class Downloader(object):
         for row in tree.xpath('//form/table/tr/td/table/tr/td/div/table/tr'):
             cells = [c for c in row.xpath('./td/strong/text()') if c.strip()]
             if cells and cells[0] == u'ВСЕГО ЗА МЕСЯЦ:':
-                record.extend([cells[1], cells[2]])
+                record.extend([cells[1], cells[2].replace(" ", "")])
         return record
 
 if __name__ == "__main__":
@@ -136,10 +136,14 @@ if __name__ == "__main__":
             )
     parser = OptionParser(usage=u"""Usage: %prog -a <account_no> -p <pin> [options]
     Скрипт скачивает статистику по телефонии Ростелекома за месяц, указанный в параметре --date
-    Выдача в CSV в стандартный вывод""",
+    Итоговый CSV выдется в стандартный вывод""",
                         option_list=option_list)
     parser.set_defaults(action="local")
     options, args = parser.parse_args()
+
+    if not options.account or not options.pin:
+        parser.print_usage()
+        exit(4)
 
     try:
         month = datetime.strptime(options.date, DATE_FORMAT)
